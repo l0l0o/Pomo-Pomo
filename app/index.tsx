@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Text, TouchableOpacity, View, Animated } from "react-native";
+import { TouchableOpacity, View, Animated } from "react-native";
 import { timerStyles, createAnimatedStyles } from "./styles/timerStyles";
 
 export default function Index() {
