@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
+import { timerStyles } from "./styles/timerStyles";
 
 export default function Index() {
   const [counter, setCounter] = useState(25 * 60);
@@ -48,64 +49,20 @@ export default function Index() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Pomopomo</Text>
-      <Text style={styles.time}>{formatTime(counter)}</Text>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleStart}
-          disabled={isRunning}
-        >
-          <Text style={styles.buttonText}>Start</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleStop}>
-          <Text style={styles.buttonText}>Pause</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleReset}>
-          <Text style={styles.buttonText}>Reset</Text>
-        </TouchableOpacity>
+    <View style={timerStyles.container}>
+      <Text style={timerStyles.text}>Pomopomo</Text>
+      <Text style={timerStyles.time}>{formatTime(counter)}</Text>
+      <View style={timerStyles.buttonContainer}>
+        {isRunning ? (
+          <TouchableOpacity style={timerStyles.button} onPress={handleStop}>
+            <Text style={timerStyles.buttonText}>Pause</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={timerStyles.button} onPress={handleStart}>
+            <Text style={timerStyles.buttonText}>Start</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    height: "100%",
-    padding: 10,
-    backgroundColor: "#FFA4AF",
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#FFCCD2",
-  },
-  time: {
-    fontSize: 76,
-    fontWeight: "bold",
-    color: "#C07B84",
-  },
-  button: {
-    backgroundColor: "#FFCCD2",
-    padding: 10,
-    alignItems: "center",
-    borderRadius: 5,
-    width: "100%",
-  },
-  buttonContainer: {
-    marginTop: 20,
-    flexDirection: "column",
-    gap: 10,
-    width: "100%",
-  },
-  buttonText: {
-    color: "#C07B84",
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-});
