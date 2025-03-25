@@ -34,7 +34,7 @@ export const timerStyles = StyleSheet.create({
   pomodoroCountContainer: {
     position: "absolute",
     top: 50,
-    right: 50,
+    right: 20,
   },
   pomodoroCountText: {
     fontSize: 16,
