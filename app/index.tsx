@@ -1,12 +1,21 @@
 import { useEffect, useRef, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
-import { timerStyles } from "./styles/timerStyles";
+import { Text, TouchableOpacity, View, Animated } from "react-native";
+import { timerStyles, createAnimatedStyles } from "./styles/timerStyles";
 
 export default function Index() {
-  const [counter, setCounter] = useState(25 * 60);
+  const workTime = 25 * 60;
+  const breakTime = 5 * 60;
+
+  const [counter, setCounter] = useState(workTime);
   const [isRunning, setIsRunning] = useState(false);
   const [isWorkTime, setIsWorkTime] = useState(true);
+  const [pomodoroCount, setPomodoroCount] = useState(0);
+
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const animationValue = useRef(new Animated.Value(0)).current;
+
+  const animatedStyles = createAnimatedStyles(animationValue);
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -14,13 +23,23 @@ export default function Index() {
     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
-  const workTime = 25 * 60;
-  const breakTime = 5 * 60;
+  // Animer la transition entre les modes
+  useEffect(() => {
+    Animated.timing(animationValue, {
+      toValue: isWorkTime ? 0 : 1,
+      duration: 500, // durée de l'animation en millisecondes
+      useNativeDriver: false, // nécessaire pour les animations de couleur
+    }).start();
+  }, [isWorkTime]);
 
   useEffect(() => {
     if (counter === 0) {
+      // Si on passe de break à work, on a terminé un cycle, donc on incrémente le compteur
+      if (!isWorkTime) {
+        setPomodoroCount((prev) => prev + 1);
+      }
       setIsWorkTime(!isWorkTime);
-      setCounter(isWorkTime ? workTime : breakTime);
+      setCounter(isWorkTime ? breakTime : workTime);
     }
   }, [counter, isWorkTime]);
 
@@ -44,25 +63,75 @@ export default function Index() {
     setIsRunning(false);
   };
 
-  const handleReset = () => {
-    setCounter(workTime);
-  };
-
   return (
-    <View style={timerStyles.container}>
-      <Text style={timerStyles.text}>Pomopomo</Text>
-      <Text style={timerStyles.time}>{formatTime(counter)}</Text>
+    <Animated.View
+      style={[timerStyles.container, animatedStyles.animatedContainer]}
+    >
+      <View style={timerStyles.pomodoroCountContainer}>
+        <Animated.Text
+          style={[
+            timerStyles.pomodoroCountText,
+            animatedStyles.animatedCountText,
+          ]}
+        >
+          {pomodoroCount} pomodoros
+        </Animated.Text>
+      </View>
+      <Animated.Text style={[timerStyles.text, animatedStyles.animatedText]}>
+        {isWorkTime ? "Let's work" : "Take a break"}
+      </Animated.Text>
+      <Animated.Text style={[timerStyles.time, animatedStyles.animatedTime]}>
+        {formatTime(counter)}
+      </Animated.Text>
       <View style={timerStyles.buttonContainer}>
         {isRunning ? (
-          <TouchableOpacity style={timerStyles.button} onPress={handleStop}>
-            <Text style={timerStyles.buttonText}>Pause</Text>
+          <TouchableOpacity onPress={handleStop} style={timerStyles.button}>
+            <Animated.View
+              style={[
+                {
+                  width: "100%",
+                  padding: 10,
+                  alignItems: "center",
+                  borderRadius: 5,
+                },
+                animatedStyles.animatedButton,
+              ]}
+            >
+              <Animated.Text
+                style={[
+                  timerStyles.buttonText,
+                  animatedStyles.animatedButtonText,
+                ]}
+              >
+                Pause
+              </Animated.Text>
+            </Animated.View>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={timerStyles.button} onPress={handleStart}>
-            <Text style={timerStyles.buttonText}>Start</Text>
+          <TouchableOpacity onPress={handleStart} style={timerStyles.button}>
+            <Animated.View
+              style={[
+                {
+                  width: "100%",
+                  padding: 10,
+                  alignItems: "center",
+                  borderRadius: 5,
+                },
+                animatedStyles.animatedButton,
+              ]}
+            >
+              <Animated.Text
+                style={[
+                  timerStyles.buttonText,
+                  animatedStyles.animatedButtonText,
+                ]}
+              >
+                Start
+              </Animated.Text>
+            </Animated.View>
           </TouchableOpacity>
         )}
       </View>
-    </View>
+    </Animated.View>
   );
 }

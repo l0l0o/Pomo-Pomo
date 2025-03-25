@@ -1,5 +1,27 @@
 import { StyleSheet } from "react-native";
+import { Animated } from "react-native";
 
+// Définir des couleurs pour faciliter les transitions
+export const colors = {
+  work: {
+    background: "#FFA4AF",
+    text: "#FFCCD2",
+    time: "#C07B84",
+    buttonBg: "#FFCCD2",
+    buttonText: "#C07B84",
+    countText: "#C07B84",
+  },
+  break: {
+    background: "#A8D8AD",
+    text: "#D8F2DB",
+    time: "#5E9367",
+    buttonBg: "#D8F2DB",
+    buttonText: "#5E9367",
+    countText: "#5E9367",
+  },
+};
+
+// Styles statiques
 export const timerStyles = StyleSheet.create({
   container: {
     flex: 1,
@@ -8,24 +30,15 @@ export const timerStyles = StyleSheet.create({
     width: "100%",
     height: "100%",
     padding: 50,
-    backgroundColor: "#FFA4AF",
   },
-  text: {
-    fontSize: 24,
+  pomodoroCountContainer: {
+    position: "absolute",
+    top: 50,
+    right: 50,
+  },
+  pomodoroCountText: {
+    fontSize: 16,
     fontWeight: "bold",
-    color: "#FFCCD2",
-  },
-  time: {
-    fontSize: 76,
-    fontWeight: "bold",
-    color: "#C07B84",
-  },
-  button: {
-    backgroundColor: "#FFCCD2",
-    padding: 10,
-    alignItems: "center",
-    borderRadius: 5,
-    width: "100%",
   },
   buttonContainer: {
     marginTop: 20,
@@ -33,9 +46,65 @@ export const timerStyles = StyleSheet.create({
     gap: 10,
     width: "100%",
   },
+  button: {
+    padding: 0,
+    width: "100%",
+    marginBottom: 10,
+  },
+
+  // Styles de base pour la rétrocompatibilité
+  text: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  time: {
+    fontSize: 76,
+    fontWeight: "bold",
+  },
   buttonText: {
-    color: "#C07B84",
     fontSize: 24,
     fontWeight: "bold",
   },
 });
+
+// Fonction pour créer des styles animés
+export const createAnimatedStyles = (animation: Animated.Value) => {
+  return {
+    animatedContainer: {
+      backgroundColor: animation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [colors.work.background, colors.break.background],
+      }),
+    },
+    animatedText: {
+      color: animation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [colors.work.text, colors.break.text],
+      }),
+    },
+    animatedTime: {
+      color: animation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [colors.work.time, colors.break.time],
+      }),
+    },
+    animatedButton: {
+      backgroundColor: animation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [colors.work.buttonBg, colors.break.buttonBg],
+      }),
+    },
+    animatedButtonText: {
+      color: animation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [colors.work.buttonText, colors.break.buttonText],
+      }),
+    },
+    animatedCountText: {
+      color: animation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [colors.work.countText, colors.break.countText],
+      }),
+    },
+  };
+};
