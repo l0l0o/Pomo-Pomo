@@ -5,7 +5,7 @@ import React, {
   useRef,
   useEffect,
 } from "react";
-import { Animated } from "react-native";
+import { Animated, AppState, AppStateStatus } from "react-native";
 import { colors } from "../styles/timerStyles";
 
 // Durées en secondes
@@ -42,6 +42,60 @@ export const PomodoroProvider: React.FC<{ children: React.ReactNode }> = ({
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const animationValue = useRef(new Animated.Value(0)).current;
   const pauseAnimationValue = useRef(new Animated.Value(1)).current;
+  const startTimeRef = useRef<number | null>(null);
+  const remainingTimeRef = useRef<number>(WORK_TIME);
+  const appState = useRef(AppState.currentState);
+
+  // Gérer les changements d'état de l'application (foreground/background)
+  useEffect(() => {
+    const subscription = AppState.addEventListener(
+      "change",
+      handleAppStateChange
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  const handleAppStateChange = (nextAppState: AppStateStatus) => {
+    if (isRunning) {
+      if (
+        appState.current === "active" &&
+        nextAppState.match(/inactive|background/)
+      ) {
+        // L'app passe en arrière-plan, on enregistre le temps actuel
+        startTimeRef.current = Date.now();
+        remainingTimeRef.current = counter;
+
+        // Arrêter l'intervalle car il ne sera pas fiable en arrière-plan
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+      } else if (
+        nextAppState === "active" &&
+        appState.current.match(/inactive|background/)
+      ) {
+        // L'app revient au premier plan, calculer le temps écoulé
+        if (startTimeRef.current !== null) {
+          const elapsedSeconds = Math.floor(
+            (Date.now() - startTimeRef.current) / 1000
+          );
+          const newCounter = Math.max(
+            0,
+            remainingTimeRef.current - elapsedSeconds
+          );
+          setCounter(newCounter);
+
+          // Redémarrer l'intervalle
+          startTimer(newCounter);
+        }
+      }
+    }
+
+    appState.current = nextAppState;
+  };
 
   // Animer la transition entre les modes
   useEffect(() => {
@@ -89,40 +143,68 @@ export const PomodoroProvider: React.FC<{ children: React.ReactNode }> = ({
         setPomodoroCount((prev) => prev + 1);
       }
       setIsWorkTime(!isWorkTime);
-      setCounter(isWorkTime ? BREAK_TIME : WORK_TIME);
+      const newDuration = isWorkTime ? BREAK_TIME : WORK_TIME;
+      setCounter(newDuration);
+
+      if (isRunning) {
+        // Si le timer était en cours, démarrer automatiquement le nouveau cycle
+        startTimer(newDuration);
+      }
     }
   }, [counter, isWorkTime]);
 
-  const handleStart = () => {
-    setIsRunning(true);
-    setHasStarted(true);
+  const startTimer = (initialValue: number) => {
+    // Enregistrer l'heure de départ et la valeur initiale du compteur
+    startTimeRef.current = Date.now();
+    remainingTimeRef.current = initialValue;
 
+    // Arrêter tout intervalle existant
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
 
+    // Démarrer un nouvel intervalle
     intervalRef.current = setInterval(() => {
-      setCounter((prev) => prev - 1);
+      if (startTimeRef.current) {
+        const elapsedSeconds = Math.floor(
+          (Date.now() - startTimeRef.current) / 1000
+        );
+        const newCounter = Math.max(
+          0,
+          remainingTimeRef.current - elapsedSeconds
+        );
+        setCounter(newCounter);
+      }
     }, 1000);
+  };
+
+  const handleStart = () => {
+    setIsRunning(true);
+    setHasStarted(true);
+    startTimer(counter);
   };
 
   const handleStop = () => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
-
     setIsRunning(false);
+    remainingTimeRef.current = counter;
   };
 
   const handleReset = () => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
 
     setIsRunning(false);
     setCounter(WORK_TIME);
     setIsWorkTime(true);
     setHasStarted(false);
+    startTimeRef.current = null;
+    remainingTimeRef.current = WORK_TIME;
   };
 
   const formatTime = (seconds: number) => {
