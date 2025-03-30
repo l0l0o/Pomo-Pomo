@@ -1,11 +1,11 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { PomodoroTimer } from "../organisms/PomodoroTimer";
+import { TaskList } from "../organisms/TaskList";
 
-export const PomodoroTemplate: React.FC = () => {
+export const TaskTemplate: React.FC = () => {
   return (
     <View style={styles.container}>
-      <PomodoroTimer />
+      <TaskList />
     </View>
   );
 };

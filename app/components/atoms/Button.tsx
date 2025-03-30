@@ -13,6 +13,7 @@ type ButtonProps = {
   label: string;
   animatedButtonStyle: StyleProp<ViewStyle>;
   animatedTextStyle: StyleProp<TextStyle>;
+  style?: StyleProp<ViewStyle>;
 };
 
 export const Button: React.FC<ButtonProps> = ({
@@ -20,9 +21,10 @@ export const Button: React.FC<ButtonProps> = ({
   label,
   animatedButtonStyle,
   animatedTextStyle,
+  style,
 }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={timerStyles.button}>
+    <TouchableOpacity onPress={onPress} style={[timerStyles.button, style]}>
       <Animated.View
         style={[
           {

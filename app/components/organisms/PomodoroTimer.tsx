@@ -5,6 +5,9 @@ import { StatusDisplay } from "../molecules/StatusDisplay";
 import { ControlButtonGroup } from "../molecules/ControlButtonGroup";
 import { usePomodoro } from "../../context/PomodoroContext";
 import { timerStyles, createAnimatedStyles } from "../../styles/timerStyles";
+import { TextDisplay } from "../atoms/TextDisplay";
+import { useTask } from "../../context/TaskContext";
+import { CurrentTaskDisplay } from "../molecules/CurrentTaskDisplay";
 
 export const PomodoroTimer: React.FC = () => {
   const {
@@ -20,6 +23,8 @@ export const PomodoroTimer: React.FC = () => {
     handleReset,
     formatTime,
   } = usePomodoro();
+
+  const { currentTask } = useTask();
 
   const animatedStyles = createAnimatedStyles(animationValue);
 
@@ -55,6 +60,11 @@ export const PomodoroTimer: React.FC = () => {
         animatedButtonStyle={animatedStyles.animatedButton}
         animatedTextStyle={animatedStyles.animatedButtonText}
       />
+
+      <CurrentTaskDisplay
+        currentTask={currentTask}
+        animatedTextStyle={animatedStyles.animatedText}
+      />
     </Animated.View>
   );
 };
@@ -65,5 +75,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
+  },
+  border: {
+    borderWidth: 1,
+    borderColor: "rgb(192, 123, 132)",
+    backgroundColor: "rgb(192, 123, 132)",
+    borderRadius: 5,
+    width: "100%",
+    height: 200,
+    marginTop: 20,
   },
 });

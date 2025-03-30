@@ -1,7 +1,8 @@
 import React from "react";
-import { View, StyleProp, ViewStyle } from "react-native";
+import { View, StyleProp, ViewStyle, StyleSheet } from "react-native";
 import { Button } from "../atoms/Button";
 import { timerStyles } from "../../styles/timerStyles";
+import { colors } from "../../styles/timerStyles";
 
 type ControlButtonGroupProps = {
   isRunning: boolean;
@@ -30,6 +31,7 @@ export const ControlButtonGroup: React.FC<ControlButtonGroupProps> = ({
           label="Pause"
           animatedButtonStyle={animatedButtonStyle}
           animatedTextStyle={animatedTextStyle}
+          style={styles.mainButtonStyle}
         />
       ) : (
         <Button
@@ -37,15 +39,36 @@ export const ControlButtonGroup: React.FC<ControlButtonGroupProps> = ({
           label="Start"
           animatedButtonStyle={animatedButtonStyle}
           animatedTextStyle={animatedTextStyle}
+          style={styles.mainButtonStyle}
         />
       )}
 
       <Button
         onPress={onReset}
         label="Reset"
-        animatedButtonStyle={animatedButtonStyle}
-        animatedTextStyle={animatedTextStyle}
+        animatedButtonStyle={styles.resetButtonStyle}
+        animatedTextStyle={styles.resetTextStyle}
+        style={styles.resetButton}
       />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  mainButtonStyle: {
+    width: "100%",
+    marginBottom: 10,
+  },
+  resetButton: {
+    width: "100%",
+  },
+  resetButtonStyle: {
+    backgroundColor: "rgba(192, 123, 132, 0.7)",
+    borderRadius: 8,
+  },
+  resetTextStyle: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+});
