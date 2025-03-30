@@ -12,6 +12,7 @@ import { TaskForm } from "../atoms/TaskForm";
 import { colors } from "../../styles/timerStyles";
 import { TextDisplay } from "../atoms/TextDisplay";
 import { timerStyles } from "../../styles/timerStyles";
+import { usePomodoro } from "../../context/PomodoroContext";
 
 export const TaskList: React.FC = () => {
   const {
@@ -22,6 +23,9 @@ export const TaskList: React.FC = () => {
     deleteTask,
     setCurrentTask,
   } = useTask();
+
+  const { isWorkTime } = usePomodoro();
+  const currentMode = isWorkTime ? "work" : "break";
 
   const handleTaskPress = (task: Task) => {
     if (currentTask && currentTask.id === task.id) {
@@ -34,12 +38,17 @@ export const TaskList: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView
+      style={[
+        styles.safeArea,
+        { backgroundColor: colors[currentMode].background },
+      ]}
+    >
       <Animated.View
         style={[
           timerStyles.container,
           {
-            backgroundColor: colors.work.background,
+            backgroundColor: colors[currentMode].background,
             paddingTop: 60,
             paddingBottom: 0,
             paddingHorizontal: 10,
@@ -56,7 +65,10 @@ export const TaskList: React.FC = () => {
               <TextDisplay
                 text="Vous n'avez pas encore de tâches"
                 animatedStyle={undefined}
-                style={styles.emptyText}
+                style={[
+                  styles.emptyText,
+                  { color: colors[currentMode].taskText },
+                ]}
               />
             </View>
           ) : (
@@ -83,7 +95,6 @@ export const TaskList: React.FC = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.work.background,
   },
   formWrapper: {
     width: "100%",
@@ -103,7 +114,6 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    color: colors.work.text,
     textAlign: "center",
     fontWeight: "bold",
   },
