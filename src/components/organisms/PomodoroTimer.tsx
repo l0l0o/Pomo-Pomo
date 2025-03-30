@@ -1,15 +1,10 @@
 import React from "react";
-import { Animated, StyleSheet, View } from "react-native";
+import { Animated, StyleSheet } from "react-native";
 import { PomodoroCounter } from "../molecules/PomodoroCounter";
 import { StatusDisplay } from "../molecules/StatusDisplay";
 import { ControlButtonGroup } from "../molecules/ControlButtonGroup";
 import { usePomodoro } from "../../context/PomodoroContext";
-import {
-  timerStyles,
-  createAnimatedStyles,
-  colors,
-} from "../../styles/timerStyles";
-import { TextDisplay } from "../atoms/TextDisplay";
+import { timerStyles, createAnimatedStyles } from "../../styles/timerStyles";
 import { useTask } from "../../context/TaskContext";
 import { CurrentTaskDisplay } from "../molecules/CurrentTaskDisplay";
 
@@ -29,7 +24,6 @@ export const PomodoroTimer: React.FC = () => {
   } = usePomodoro();
 
   const { currentTask } = useTask();
-  const currentMode = isWorkTime ? "work" : "break";
 
   const animatedStyles = createAnimatedStyles(animationValue);
 

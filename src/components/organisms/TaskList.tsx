@@ -20,8 +20,8 @@ export const TaskList: React.FC = () => {
     tasks,
     currentTask,
     addTask,
-    toggleTaskCompletion,
-    deleteTask,
+    toggleTaskCompletion: _toggleTaskCompletion,
+    deleteTask: _deleteTask,
     setCurrentTask,
   } = useTask();
 

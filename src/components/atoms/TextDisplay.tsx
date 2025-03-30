@@ -1,5 +1,5 @@
 import React from "react";
-import { Animated, StyleProp, TextStyle, TextProps } from "react-native";
+import { Animated, StyleProp, TextStyle } from "react-native";
 import { timerStyles } from "../../styles/timerStyles";
 
 type TextDisplayProps = {

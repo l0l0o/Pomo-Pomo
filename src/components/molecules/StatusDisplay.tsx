@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleProp, ViewStyle, StyleSheet, Animated } from "react-native";
+import { View, StyleProp, ViewStyle, StyleSheet } from "react-native";
 import { TextDisplay } from "../atoms/TextDisplay";
 import { TimeDisplay } from "../atoms/TimeDisplay";
 

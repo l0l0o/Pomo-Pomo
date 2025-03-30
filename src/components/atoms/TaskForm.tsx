@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-  Animated,
-} from "react-native";
-import { TextDisplay } from "./TextDisplay";
+import { View, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 import { colors } from "../../styles/timerStyles";
 import { Ionicons } from "@expo/vector-icons";
 import { usePomodoro } from "../../context/PomodoroContext";

@@ -2,10 +2,9 @@ import { Tabs } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { colors } from "./styles/timerStyles";
-import { TaskProvider } from "./context/TaskContext";
-import { PomodoroProvider, usePomodoro } from "./context/PomodoroContext";
-import { View } from "react-native";
+import { colors } from "../src/styles/timerStyles";
+import { TaskProvider } from "../src/context/TaskContext";
+import { PomodoroProvider, usePomodoro } from "../src/context/PomodoroContext";
 
 function TabsLayout() {
   const { isWorkTime } = usePomodoro();

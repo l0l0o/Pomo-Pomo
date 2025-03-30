@@ -1,16 +1,14 @@
 import React from "react";
 import {
   View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   TextStyle,
   StyleProp,
-  Animated,
 } from "react-native";
 import { router } from "expo-router";
 import { TextDisplay } from "../atoms/TextDisplay";
-import { createAnimatedStyles, colors } from "../../styles/timerStyles";
+import { colors } from "../../styles/timerStyles";
 import { usePomodoro } from "../../context/PomodoroContext";
 
 interface CurrentTaskDisplayProps {
