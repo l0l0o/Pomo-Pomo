@@ -32,9 +32,8 @@ export const timerStyles = StyleSheet.create({
     padding: 50,
   },
   pomodoroCountContainer: {
-    position: "absolute",
-    top: 50,
-    right: 20,
+    alignSelf: "flex-end",
+    marginBottom: 20,
   },
   pomodoroCountText: {
     fontSize: 16,
@@ -54,11 +53,11 @@ export const timerStyles = StyleSheet.create({
 
   // Styles de base pour la rétrocompatibilité
   text: {
-    fontSize: 24,
+    fontSize: 36,
     fontWeight: "bold",
   },
   time: {
-    fontSize: 76,
+    fontSize: 100,
     fontWeight: "bold",
   },
   buttonText: {
