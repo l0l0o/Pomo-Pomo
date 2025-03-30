@@ -6,18 +6,22 @@ export const colors = {
   work: {
     background: "#FFA4AF",
     text: "#FFCCD2",
-    time: "#C07B84",
+    time: "#783C43",
     buttonBg: "#FFCCD2",
-    buttonText: "#C07B84",
-    countText: "#C07B84",
+    buttonText: "#783C43",
+    countText: "#783C43",
+    taskText: "#783C43",
+    taskDescription: "#8A4B53",
   },
   break: {
     background: "#A8D8AD",
     text: "#D8F2DB",
-    time: "#5E9367",
+    time: "#2F4A33",
     buttonBg: "#D8F2DB",
-    buttonText: "#5E9367",
-    countText: "#5E9367",
+    buttonText: "#2F4A33",
+    countText: "#2F4A33",
+    taskText: "#2F4A33",
+    taskDescription: "#3D5E42",
   },
 };
 
@@ -29,7 +33,8 @@ export const timerStyles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     height: "100%",
-    padding: 50,
+    paddingVertical: 50,
+    paddingHorizontal: 10,
   },
   pomodoroCountContainer: {
     alignSelf: "flex-end",
@@ -103,6 +108,21 @@ export const createAnimatedStyles = (animation: Animated.Value) => {
       color: animation.interpolate({
         inputRange: [0, 1],
         outputRange: [colors.work.countText, colors.break.countText],
+      }),
+    },
+    animatedTaskText: {
+      color: animation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [colors.work.taskText, colors.break.taskText],
+      }),
+    },
+    animatedTaskDescription: {
+      color: animation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [
+          colors.work.taskDescription,
+          colors.break.taskDescription,
+        ],
       }),
     },
   };

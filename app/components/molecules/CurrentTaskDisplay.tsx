@@ -1,162 +1,136 @@
 import React from "react";
 import {
   View,
+  Text,
   StyleSheet,
-  Animated,
   TouchableOpacity,
-  ScrollView,
+  TextStyle,
+  StyleProp,
+  Animated,
 } from "react-native";
+import { router } from "expo-router";
 import { TextDisplay } from "../atoms/TextDisplay";
-import { Task } from "../../context/TaskContext";
-import { colors } from "../../styles/timerStyles";
-import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import { createAnimatedStyles, colors } from "../../styles/timerStyles";
+import { usePomodoro } from "../../context/PomodoroContext";
 
-type CurrentTaskDisplayProps = {
-  currentTask: Task | null;
-  animatedTextStyle: any;
-};
+interface CurrentTaskDisplayProps {
+  currentTask: {
+    id: string;
+    title: string;
+    description?: string;
+  } | null;
+  animatedTextStyle?: StyleProp<TextStyle>;
+}
 
 export const CurrentTaskDisplay: React.FC<CurrentTaskDisplayProps> = ({
   currentTask,
   animatedTextStyle,
 }) => {
-  const router = useRouter();
+  const { isWorkTime } = usePomodoro();
+  const currentMode = isWorkTime ? "work" : "break";
 
-  const navigateToTasks = () => {
-    router.push("/tasks");
+  // Fonction pour naviguer vers la liste des tâches
+  const navigateToTaskList = () => {
+    router.navigate("/tasks");
   };
 
   if (!currentTask) {
     return (
-      <View style={styles.containerEmpty}>
+      <TouchableOpacity
+        style={styles.emptyContainer}
+        onPress={navigateToTaskList}
+      >
         <TextDisplay
           text="Aucune tâche sélectionnée"
           animatedStyle={animatedTextStyle}
-          style={styles.noTaskText}
+          style={[styles.emptyText, { color: colors[currentMode].taskText }]}
         />
-        <TouchableOpacity
-          style={styles.addTaskButton}
-          onPress={navigateToTasks}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="add-circle-outline" size={22} color="#FFFFFF" />
-          <TextDisplay
-            text="Ajouter une tâche"
-            animatedStyle={undefined}
-            style={styles.addTaskText}
-          />
-        </TouchableOpacity>
-      </View>
+        <TextDisplay
+          text="Appuyez pour ajouter une tâche"
+          animatedStyle={animatedTextStyle}
+          style={[
+            styles.addText,
+            { color: colors[currentMode].taskDescription },
+          ]}
+        />
+      </TouchableOpacity>
     );
   }
 
-  // Préparer le texte de description ou utiliser un texte par défaut
-  const descriptionText = currentTask.description?.trim()
-    ? currentTask.description
-    : "Aucune description";
-
-  // Style pour le texte par défaut (italique et légèrement transparent)
-  const descriptionStyle = !currentTask.description?.trim()
-    ? styles.noDescriptionText
-    : {};
-
   return (
-    <View style={styles.container}>
-      <View style={styles.titleContainer}>
+    <TouchableOpacity style={styles.container} onPress={navigateToTaskList}>
+      <View style={styles.content}>
         <TextDisplay
           text={currentTask.title}
-          animatedStyle={undefined}
-          style={styles.taskTitle}
-          numberOfLines={1}
-          ellipsizeMode="tail"
+          animatedStyle={animatedTextStyle}
+          style={[styles.title, { color: colors[currentMode].taskText }]}
+        />
+        <TextDisplay
+          text={currentTask.description || "Aucune description."}
+          animatedStyle={animatedTextStyle}
+          style={[
+            styles.description,
+            { color: colors[currentMode].taskDescription },
+          ]}
         />
       </View>
-
-      <ScrollView
-        style={styles.descriptionScrollView}
-        showsVerticalScrollIndicator={true}
-      >
-        <TextDisplay
-          text={descriptionText}
-          animatedStyle={undefined}
-          style={[styles.taskDescription, descriptionStyle]}
-        />
-      </ScrollView>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 40,
     marginTop: 20,
-    width: "100%",
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.3)",
-    maxHeight: 200,
-    overflow: "hidden",
-  },
-  containerEmpty: {
     backgroundColor: "rgba(255, 255, 255, 0.2)",
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 40,
-    marginTop: 20,
+    borderRadius: 10,
+    padding: 15,
     width: "100%",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.3)",
   },
-  titleContainer: {
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(255, 255, 255, 0.2)",
-    paddingBottom: 8,
-    marginBottom: 8,
-  },
-  noTaskText: {
-    textAlign: "center",
-    fontSize: 16,
-    marginBottom: 12,
-    color: "#FFFFFF",
-    fontWeight: "bold",
-  },
-  taskTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#FFFFFF",
-  },
-  descriptionScrollView: {
-    maxHeight: 140,
-  },
-  taskDescription: {
-    fontSize: 14,
-    color: "#FFFFFF",
-    paddingBottom: 10,
-  },
-  noDescriptionText: {
-    fontStyle: "italic",
-    opacity: 0.7,
-  },
-  addTaskButton: {
-    flexDirection: "row",
-    backgroundColor: colors.work.time,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 20,
+  emptyContainer: {
+    marginTop: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    borderRadius: 10,
+    padding: 15,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 10,
-    borderWidth: 1,
-    borderColor: "#FFFFFF",
+    width: "100%",
   },
-  addTaskText: {
-    fontSize: 14,
+  content: {
+    paddingHorizontal: 10,
+  },
+  title: {
+    fontSize: 18,
     fontWeight: "bold",
-    color: "#FFFFFF",
-    marginLeft: 8,
+    marginBottom: 5,
+  },
+  description: {
+    fontSize: 14,
+    opacity: 0.9,
+  },
+  emptyText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  addText: {
+    fontSize: 14,
+    opacity: 0.9,
+    textAlign: "center",
+    marginTop: 5,
+  },
+  resetButton: {
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    borderRadius: 10,
+    padding: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.5)",
+  },
+  resetButtonText: {
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });

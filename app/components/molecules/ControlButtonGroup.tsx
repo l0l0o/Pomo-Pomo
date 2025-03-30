@@ -1,8 +1,8 @@
 import React from "react";
 import { View, StyleProp, ViewStyle, StyleSheet } from "react-native";
 import { Button } from "../atoms/Button";
-import { timerStyles } from "../../styles/timerStyles";
-import { colors } from "../../styles/timerStyles";
+import { timerStyles, colors } from "../../styles/timerStyles";
+import { usePomodoro } from "../../context/PomodoroContext";
 
 type ControlButtonGroupProps = {
   isRunning: boolean;
@@ -23,6 +23,9 @@ export const ControlButtonGroup: React.FC<ControlButtonGroupProps> = ({
   animatedTextStyle,
   containerStyle,
 }) => {
+  const { isWorkTime } = usePomodoro();
+  const currentMode = isWorkTime ? "work" : "break";
+
   return (
     <View style={[timerStyles.buttonContainer, containerStyle]}>
       {isRunning ? (
@@ -46,7 +49,10 @@ export const ControlButtonGroup: React.FC<ControlButtonGroupProps> = ({
       <Button
         onPress={onReset}
         label="Reset"
-        animatedButtonStyle={styles.resetButtonStyle}
+        animatedButtonStyle={[
+          styles.resetButtonStyle,
+          { backgroundColor: `${colors[currentMode].taskText}90` },
+        ]}
         animatedTextStyle={styles.resetTextStyle}
         style={styles.resetButton}
       />
@@ -63,7 +69,6 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   resetButtonStyle: {
-    backgroundColor: "rgba(192, 123, 132, 0.7)",
     borderRadius: 8,
   },
   resetTextStyle: {

@@ -10,6 +10,7 @@ import { TextDisplay } from "./TextDisplay";
 import { Task } from "../../context/TaskContext";
 import { colors } from "../../styles/timerStyles";
 import { Ionicons } from "@expo/vector-icons";
+import { usePomodoro } from "../../context/PomodoroContext";
 
 type TaskCardProps = {
   task: Task;
@@ -24,6 +25,9 @@ export const TaskCard: React.FC<TaskCardProps> = ({
   isCurrent,
   animatedStyle,
 }) => {
+  const { isWorkTime } = usePomodoro();
+  const currentMode = isWorkTime ? "work" : "break";
+
   const descriptionStyle: TextStyle = !task.description
     ? { fontStyle: "italic", opacity: 0.7 }
     : {};
@@ -31,24 +35,39 @@ export const TaskCard: React.FC<TaskCardProps> = ({
 
   return (
     <TouchableOpacity
-      style={[styles.card, isCurrent ? styles.cardSelected : null]}
+      style={[
+        styles.card,
+        isCurrent ? styles.cardSelected : null,
+        { backgroundColor: colors[currentMode].buttonBg },
+      ]}
       onPress={() => onPress(task)}
       activeOpacity={0.7}
     >
-      {isCurrent && <View style={styles.selectedIndicator} />}
+      {isCurrent && (
+        <View
+          style={[
+            styles.selectedIndicator,
+            { backgroundColor: colors[currentMode].taskText },
+          ]}
+        />
+      )}
 
       <View style={styles.taskContent}>
         <View style={styles.titleContainer}>
           <TextDisplay
             text={task.title}
             animatedStyle={undefined}
-            style={styles.title}
+            style={[styles.title, { color: colors[currentMode].taskText }]}
           />
         </View>
         <TextDisplay
           text={descriptionText}
           animatedStyle={undefined}
-          style={[styles.description, descriptionStyle]}
+          style={[
+            styles.description,
+            descriptionStyle,
+            { color: colors[currentMode].taskDescription },
+          ]}
         />
       </View>
 
@@ -58,12 +77,17 @@ export const TaskCard: React.FC<TaskCardProps> = ({
             <Ionicons
               name="checkmark-circle"
               size={24}
-              color={colors.work.background}
+              color={colors[currentMode].taskText}
             />
           </View>
         )}
         {isCurrent && (
-          <View style={styles.currentBadge}>
+          <View
+            style={[
+              styles.currentBadge,
+              { backgroundColor: colors[currentMode].taskText },
+            ]}
+          >
             <TextDisplay
               text="En cours"
               animatedStyle={undefined}
@@ -79,24 +103,16 @@ export const TaskCard: React.FC<TaskCardProps> = ({
 const styles = StyleSheet.create({
   card: {
     width: "100%",
-    padding: 16,
+    padding: 12,
     borderRadius: 12,
-    marginBottom: 16,
+    marginBottom: 12,
     position: "relative",
     flexDirection: "row",
-    backgroundColor: colors.work.buttonBg,
-    borderWidth: 1,
-    borderColor: colors.work.background,
     overflow: "hidden",
   },
   cardSelected: {
     borderWidth: 1,
-    borderColor: colors.work.background,
-    shadowColor: colors.work.background,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 8,
+    borderColor: "rgba(0, 0, 0, 0.1)",
   },
   selectedIndicator: {
     position: "absolute",
@@ -104,33 +120,30 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     width: 4,
-    backgroundColor: colors.work.background,
   },
   taskContent: {
     flex: 1,
-    paddingRight: 16,
-    paddingLeft: 8,
+    paddingRight: 10,
+    paddingLeft: 6,
   },
   titleContainer: {
     marginBottom: 8,
-    paddingBottom: 8,
+    paddingBottom: 4,
     borderBottomWidth: 1,
     borderBottomColor: "rgba(0, 0, 0, 0.05)",
   },
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    color: colors.work.buttonText,
   },
   description: {
     fontSize: 14,
     lineHeight: 20,
-    color: colors.work.buttonText,
   },
   badgeContainer: {
     position: "absolute",
-    top: 12,
-    right: 12,
+    top: 8,
+    right: 8,
     alignItems: "flex-end",
   },
   completedBadge: {
@@ -142,12 +155,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 16,
-    backgroundColor: colors.work.background,
     justifyContent: "center",
     alignItems: "center",
   },
   currentText: {
-    color: colors.work.text,
+    color: "#FFFFFF",
     fontSize: 12,
     fontWeight: "bold",
   },

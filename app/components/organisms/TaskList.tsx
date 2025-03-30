@@ -11,6 +11,7 @@ import { Task, useTask } from "../../context/TaskContext";
 import { TaskForm } from "../atoms/TaskForm";
 import { colors } from "../../styles/timerStyles";
 import { TextDisplay } from "../atoms/TextDisplay";
+import { timerStyles } from "../../styles/timerStyles";
 
 export const TaskList: React.FC = () => {
   const {
@@ -34,8 +35,20 @@ export const TaskList: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Animated.View style={[styles.container]}>
-        <TaskForm onSubmit={addTask} />
+      <Animated.View
+        style={[
+          timerStyles.container,
+          {
+            backgroundColor: colors.work.background,
+            paddingTop: 60,
+            paddingBottom: 0,
+            paddingHorizontal: 10,
+          },
+        ]}
+      >
+        <View style={styles.formWrapper}>
+          <TaskForm onSubmit={addTask} />
+        </View>
 
         <View style={styles.listContainer}>
           {tasks.length === 0 ? (
@@ -70,19 +83,15 @@ export const TaskList: React.FC = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.work.time,
+    backgroundColor: colors.work.background,
   },
-  container: {
-    flex: 1,
+  formWrapper: {
     width: "100%",
-    height: "100%",
-    padding: 20,
-    paddingTop: 60,
-    paddingBottom: 0,
-    backgroundColor: colors.work.time,
+    alignItems: "center",
   },
   listContainer: {
     flex: 1,
+    width: "100%",
   },
   listContent: {
     paddingBottom: 80,
@@ -94,7 +103,8 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    color: colors.work.buttonBg,
+    color: colors.work.text,
     textAlign: "center",
+    fontWeight: "bold",
   },
 });

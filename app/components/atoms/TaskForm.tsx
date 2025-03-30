@@ -9,6 +9,7 @@ import {
 import { TextDisplay } from "./TextDisplay";
 import { colors } from "../../styles/timerStyles";
 import { Ionicons } from "@expo/vector-icons";
+import { usePomodoro } from "../../context/PomodoroContext";
 
 type TaskFormProps = {
   onSubmit: (title: string, description: string) => void;
@@ -21,6 +22,8 @@ export const TaskForm: React.FC<TaskFormProps> = ({
 }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const { isWorkTime } = usePomodoro();
+  const currentMode = isWorkTime ? "work" : "break";
 
   const handleSubmit = () => {
     if (title.trim() !== "") {
@@ -33,70 +36,73 @@ export const TaskForm: React.FC<TaskFormProps> = ({
   return (
     <View style={styles.formContainer}>
       <TextInput
-        style={styles.input}
-        placeholder="Titre de la tâche"
-        placeholderTextColor={colors.work.buttonText}
+        style={[styles.input, { color: colors[currentMode].taskText }]}
+        placeholder="Nouvelle tâche..."
+        placeholderTextColor={`${colors[currentMode].taskDescription}80`}
         value={title}
         onChangeText={setTitle}
       />
 
-      <TextInput
-        style={[styles.input, styles.multilineInput]}
-        placeholder="Description (optionnelle)"
-        placeholderTextColor={colors.work.buttonText}
-        value={description}
-        onChangeText={setDescription}
-        multiline
-        numberOfLines={3}
-      />
-
-      <TouchableOpacity
-        style={styles.submitButton}
-        onPress={handleSubmit}
-        activeOpacity={0.7}
-      >
-        <Ionicons name="add-circle-outline" size={20} color="#FFFFFF" />
-        <TextDisplay
-          text="Ajouter la tâche"
-          animatedStyle={undefined}
-          style={styles.submitButtonText}
+      <View style={styles.descriptionRow}>
+        <TextInput
+          style={[
+            styles.input,
+            styles.multilineInput,
+            { flex: 1, marginBottom: 0, marginRight: 10 },
+            { color: colors[currentMode].taskText },
+          ]}
+          placeholder="Description (optionnelle)"
+          placeholderTextColor={`${colors[currentMode].taskDescription}80`}
+          value={description}
+          onChangeText={setDescription}
+          multiline
+          numberOfLines={3}
         />
-      </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.submitButton,
+            { backgroundColor: colors[currentMode].taskText, height: 80 },
+          ]}
+          onPress={handleSubmit}
+          activeOpacity={0.7}
+          disabled={!title.trim()}
+        >
+          <Ionicons name="add-outline" size={24} color="#FFFFFF" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   formContainer: {
-    width: "100%",
+    width: "95%",
     marginBottom: 20,
+    marginTop: 10,
   },
   input: {
-    backgroundColor: colors.work.buttonBg,
+    backgroundColor: "rgba(255, 255, 255, 0.25)",
     borderRadius: 8,
-    padding: 12,
+    padding: 14,
     fontSize: 16,
-    color: colors.work.buttonText,
-    marginBottom: 12,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.3)",
   },
   multilineInput: {
     minHeight: 80,
     textAlignVertical: "top",
   },
-  submitButton: {
-    backgroundColor: colors.work.time,
-    borderRadius: 8,
-    padding: 12,
-    alignItems: "center",
-    justifyContent: "center",
+  descriptionRow: {
     flexDirection: "row",
-    borderWidth: 1,
-    borderColor: colors.work.buttonBg,
+    alignItems: "center",
+    width: "100%",
   },
-  submitButtonText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#FFFFFF",
-    marginLeft: 8,
+  submitButton: {
+    borderRadius: 8,
+    width: 44,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

@@ -15,10 +15,10 @@ export default function RootLayout() {
           <Tabs
             screenOptions={{
               headerShown: false,
-              tabBarActiveTintColor: colors.work.time,
-              tabBarInactiveTintColor: colors.work.buttonText,
+              tabBarActiveTintColor: colors.work.buttonBg,
+              tabBarInactiveTintColor: "rgba(255, 255, 255, 0.7)",
               tabBarStyle: {
-                backgroundColor: colors.work.buttonBg,
+                backgroundColor: colors.work.time,
                 borderTopWidth: 0,
                 elevation: 0,
                 shadowOpacity: 0,
