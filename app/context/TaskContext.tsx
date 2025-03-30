@@ -17,6 +17,10 @@ type TaskContextType = {
   toggleTaskCompletion: (id: string) => Promise<void>;
   deleteTask: (id: string) => Promise<void>;
   setCurrentTask: (task: Task | null) => Promise<void>;
+  updateTask: (
+    id: string,
+    updates: { title?: string; description?: string }
+  ) => Promise<void>;
 };
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
@@ -113,6 +117,40 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  // Modifier une tâche existante
+  const updateTask = async (
+    id: string,
+    updates: { title?: string; description?: string }
+  ) => {
+    try {
+      const updatedTasks = tasks.map((task) =>
+        task.id === id ? { ...task, ...updates } : task
+      );
+
+      setTasks(updatedTasks);
+
+      // Si la tâche courante est mise à jour, mettre à jour currentTask aussi
+      if (currentTask && currentTask.id === id) {
+        const updatedCurrentTask = {
+          ...currentTask,
+          ...updates,
+        };
+        setCurrentTaskState(updatedCurrentTask);
+        await AsyncStorage.setItem(
+          STORAGE_KEYS.CURRENT_TASK,
+          JSON.stringify(updatedCurrentTask)
+        );
+      }
+
+      await AsyncStorage.setItem(
+        STORAGE_KEYS.TASKS,
+        JSON.stringify(updatedTasks)
+      );
+    } catch (error) {
+      console.error("Erreur lors de la modification d'une tâche:", error);
+    }
+  };
+
   // Supprimer une tâche
   const deleteTask = async (id: string) => {
     try {
@@ -165,6 +203,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
         toggleTaskCompletion,
         deleteTask,
         setCurrentTask,
+        updateTask,
       }}
     >
       {children}

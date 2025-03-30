@@ -6,6 +6,7 @@ import {
   Animated,
   SafeAreaView,
 } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { TaskCard } from "../atoms/TaskCard";
 import { Task, useTask } from "../../context/TaskContext";
 import { TaskForm } from "../atoms/TaskForm";
@@ -38,57 +39,59 @@ export const TaskList: React.FC = () => {
   };
 
   return (
-    <SafeAreaView
-      style={[
-        styles.safeArea,
-        { backgroundColor: colors[currentMode].background },
-      ]}
-    >
-      <Animated.View
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaView
         style={[
-          timerStyles.container,
-          {
-            backgroundColor: colors[currentMode].background,
-            paddingTop: 60,
-            paddingBottom: 0,
-            paddingHorizontal: 10,
-          },
+          styles.safeArea,
+          { backgroundColor: colors[currentMode].background },
         ]}
       >
-        <View style={styles.formWrapper}>
-          <TaskForm onSubmit={addTask} />
-        </View>
+        <Animated.View
+          style={[
+            timerStyles.container,
+            {
+              backgroundColor: colors[currentMode].background,
+              paddingTop: 60,
+              paddingBottom: 0,
+              paddingHorizontal: 10,
+            },
+          ]}
+        >
+          <View style={styles.formWrapper}>
+            <TaskForm onSubmit={addTask} />
+          </View>
 
-        <View style={styles.listContainer}>
-          {tasks.length === 0 ? (
-            <View style={styles.emptyContainer}>
-              <TextDisplay
-                text="Vous n'avez pas encore de tâches"
-                animatedStyle={undefined}
-                style={[
-                  styles.emptyText,
-                  { color: colors[currentMode].taskText },
-                ]}
-              />
-            </View>
-          ) : (
-            <FlatList
-              data={tasks}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <TaskCard
-                  task={item}
-                  onPress={handleTaskPress}
-                  isCurrent={currentTask ? currentTask.id === item.id : false}
+          <View style={styles.listContainer}>
+            {tasks.length === 0 ? (
+              <View style={styles.emptyContainer}>
+                <TextDisplay
+                  text="Vous n'avez pas encore de tâches"
+                  animatedStyle={undefined}
+                  style={[
+                    styles.emptyText,
+                    { color: colors[currentMode].taskText },
+                  ]}
                 />
-              )}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={styles.listContent}
-            />
-          )}
-        </View>
-      </Animated.View>
-    </SafeAreaView>
+              </View>
+            ) : (
+              <FlatList
+                data={tasks}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                  <TaskCard
+                    task={item}
+                    onPress={handleTaskPress}
+                    isCurrent={currentTask ? currentTask.id === item.id : false}
+                  />
+                )}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.listContent}
+              />
+            )}
+          </View>
+        </Animated.View>
+      </SafeAreaView>
+    </GestureHandlerRootView>
   );
 };
 
