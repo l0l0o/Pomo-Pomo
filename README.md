@@ -1,50 +1,76 @@
-# Welcome to your Expo app 👋
+# Pomo Pomo - Application Pomodoro
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Une application de gestion de temps basée sur la technique Pomodoro, développée avec React Native et Expo.
 
-## Get started
+![Pomodoro App](assets/app-preview.png)
 
-1. Install dependencies
+## 📱 Fonctionnalités
+
+- **Minuteur Pomodoro** : Alternez entre des périodes de travail et de pause
+- **Personnalisation** : Paramètres ajustables pour les durées de travail/pause
+- **Gestion des tâches** : Créez, modifiez et suivez vos tâches
+- **Statistiques** : Visualisez votre productivité quotidienne et hebdomadaire
+- **Notifications** : Recevez des alertes lors des changements de cycle
+
+## 🚀 Installation
+
+1. Clonez le dépôt
+
+   ```bash
+   git clone https://github.com/votre-username/Pomo-Pomo.git
+   cd Pomo-Pomo
+   ```
+
+2. Installez les dépendances
 
    ```bash
    npm install
    ```
 
-2. Start the app
-
+3. Lancez l'application
    ```bash
-    npx expo start
+   npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+## 💻 Technologies utilisées
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- [React Native](https://reactnative.dev/)
+- [Expo](https://expo.dev/)
+- [React Navigation](https://reactnavigation.org/)
+- [AsyncStorage](https://react-native-async-storage.github.io/async-storage/)
+- [Expo Notifications](https://docs.expo.dev/versions/latest/sdk/notifications/)
+- [React Native Reanimated](https://docs.swmansion.com/react-native-reanimated/)
+- [React Native Gesture Handler](https://docs.swmansion.com/react-native-gesture-handler/)
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 📋 Structure du projet
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+Pomo-Pomo/
+├── app/                 # Routes et navigation (Expo Router)
+├── src/
+│   ├── components/      # Composants UI (Atomic Design)
+│   │   ├── atoms/       # Composants de base (boutons, textes, etc.)
+│   │   ├── molecules/   # Combinaisons de composants atomiques
+│   │   ├── organisms/   # Sections fonctionnelles complètes
+│   │   └── templates/   # Mises en page des écrans
+│   ├── context/         # Contextes React (état global)
+│   ├── styles/          # Styles et thèmes
+│   └── types/           # Définitions TypeScript
+├── assets/              # Images, polices et autres ressources
+└── ...
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 🔧 Comment utiliser l'application
 
-## Learn more
+1. **Accueil** : Visualisez le minuteur Pomodoro et la tâche en cours
+2. **Tâches** : Gérez votre liste de tâches
+3. **Statistiques** : Consultez vos statistiques de productivité
+4. **Paramètres** : Personnalisez les durées des cycles et autres options
 
-To learn more about developing your project with Expo, look at the following resources:
+## 🤝 Contribuer
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou à soumettre une pull request.
 
-## Join the community
+## 📄 Licence
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus d'informations.
