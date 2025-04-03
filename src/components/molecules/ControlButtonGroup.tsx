@@ -32,17 +32,23 @@ export const ControlButtonGroup: React.FC<ControlButtonGroupProps> = ({
         <Button
           onPress={onStop}
           label="Pause"
-          animatedButtonStyle={animatedButtonStyle}
-          animatedTextStyle={animatedTextStyle}
-          style={styles.mainButtonStyle}
+          animatedButtonStyle={[
+            styles.mainButtonStyle,
+            { backgroundColor: colors[currentMode].taskText },
+          ]}
+          animatedTextStyle={styles.mainButtonTextStyle}
+          style={styles.button}
         />
       ) : (
         <Button
           onPress={onStart}
           label="Start"
-          animatedButtonStyle={animatedButtonStyle}
-          animatedTextStyle={animatedTextStyle}
-          style={styles.mainButtonStyle}
+          animatedButtonStyle={[
+            styles.mainButtonStyle,
+            { backgroundColor: colors[currentMode].taskText },
+          ]}
+          animatedTextStyle={styles.mainButtonTextStyle}
+          style={styles.button}
         />
       )}
 
@@ -51,28 +57,44 @@ export const ControlButtonGroup: React.FC<ControlButtonGroupProps> = ({
         label="Reset"
         animatedButtonStyle={[
           styles.resetButtonStyle,
-          { backgroundColor: `${colors[currentMode].taskText}90` },
+          {
+            backgroundColor: "transparent",
+            borderWidth: 1,
+            borderColor: `${colors[currentMode].taskText}30`,
+          },
         ]}
-        animatedTextStyle={styles.resetTextStyle}
-        style={styles.resetButton}
+        animatedTextStyle={[
+          styles.resetTextStyle,
+          { color: colors[currentMode].taskText },
+        ]}
+        style={styles.button}
       />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  mainButtonStyle: {
+  button: {
     width: "100%",
     marginBottom: 10,
   },
-  resetButton: {
+  mainButtonStyle: {
     width: "100%",
+    borderRadius: 12,
+    padding: 15,
+    borderColor: "transparent",
+  },
+  mainButtonTextStyle: {
+    color: "#FFFFFF",
+    fontWeight: "bold",
+    fontSize: 16,
   },
   resetButtonStyle: {
-    borderRadius: 8,
+    width: "100%",
+    borderRadius: 12,
+    padding: 15,
   },
   resetTextStyle: {
-    color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "bold",
   },
