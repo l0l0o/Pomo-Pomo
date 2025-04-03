@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   StyleSheet,
@@ -16,19 +16,42 @@ import { usePomodoro } from "../../context/PomodoroContext";
 
 export const TaskList: React.FC = () => {
   const { tasks, currentTask, addTask, setCurrentTask } = useTask();
-
   const { isWorkTime } = usePomodoro();
   const currentMode = isWorkTime ? "work" : "break";
 
-  const handleTaskPress = (task: Task) => {
-    if (currentTask && currentTask.id === task.id) {
-      // Désélectionner la tâche si elle est déjà sélectionnée
-      setCurrentTask(null);
-    } else {
-      // Sélectionner une nouvelle tâche
-      setCurrentTask(task);
-    }
-  };
+  // État local pour suivre une éventuelle action d'édition en cours
+  const [isInteracting, setIsInteracting] = useState(false);
+
+  const handleTaskPress = useCallback(
+    (task: Task) => {
+      if (isInteracting) return;
+
+      if (currentTask && currentTask.id === task.id) {
+        // Désélectionner la tâche si elle est déjà sélectionnée
+        setCurrentTask(null);
+      } else {
+        // Sélectionner une nouvelle tâche
+        setCurrentTask(task);
+      }
+    },
+    [currentTask, setCurrentTask, isInteracting]
+  );
+
+  // Optimisation du rendu de chaque élément de la liste
+  const renderTaskItem = useCallback(
+    ({ item }: { item: Task }) => (
+      <TaskCard
+        key={item.id}
+        task={item}
+        onPress={handleTaskPress}
+        isCurrent={currentTask ? currentTask.id === item.id : false}
+      />
+    ),
+    [currentTask, handleTaskPress]
+  );
+
+  // Fonction d'extraction de clé pour la FlatList
+  const keyExtractor = useCallback((item: Task) => item.id, []);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -68,16 +91,13 @@ export const TaskList: React.FC = () => {
             ) : (
               <FlatList
                 data={tasks}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                  <TaskCard
-                    task={item}
-                    onPress={handleTaskPress}
-                    isCurrent={currentTask ? currentTask.id === item.id : false}
-                  />
-                )}
+                keyExtractor={keyExtractor}
+                renderItem={renderTaskItem}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.listContent}
+                removeClippedSubviews={false}
+                initialNumToRender={10}
+                maxToRenderPerBatch={10}
               />
             )}
           </View>
