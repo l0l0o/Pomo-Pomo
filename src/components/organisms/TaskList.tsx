@@ -10,20 +10,12 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { TaskCard } from "../atoms/TaskCard";
 import { Task, useTask } from "../../context/TaskContext";
 import { TaskForm } from "../atoms/TaskForm";
-import { colors } from "../../styles/timerStyles";
+import { colors, timerStyles } from "../../styles/timerStyles";
 import { TextDisplay } from "../atoms/TextDisplay";
-import { timerStyles } from "../../styles/timerStyles";
 import { usePomodoro } from "../../context/PomodoroContext";
 
 export const TaskList: React.FC = () => {
-  const {
-    tasks,
-    currentTask,
-    addTask,
-    toggleTaskCompletion: _toggleTaskCompletion,
-    deleteTask: _deleteTask,
-    setCurrentTask,
-  } = useTask();
+  const { tasks, currentTask, addTask, setCurrentTask } = useTask();
 
   const { isWorkTime } = usePomodoro();
   const currentMode = isWorkTime ? "work" : "break";

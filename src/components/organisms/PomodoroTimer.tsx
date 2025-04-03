@@ -74,19 +74,4 @@ const styles = StyleSheet.create({
     paddingTop: 40,
     paddingBottom: 40,
   },
-  centerContent: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-  },
-  border: {
-    borderWidth: 1,
-    borderColor: "#783C43",
-    backgroundColor: "#783C43",
-    borderRadius: 5,
-    width: "100%",
-    height: 200,
-    marginTop: 20,
-  },
 });
