@@ -4,7 +4,7 @@ import { timerStyles } from "../../styles/timerStyles";
 
 type TextDisplayProps = {
   text: string;
-  animatedStyle: StyleProp<TextStyle>;
+  animatedStyle?: StyleProp<TextStyle>;
   style?: StyleProp<TextStyle>;
   numberOfLines?: number;
   ellipsizeMode?: "head" | "middle" | "tail" | "clip";

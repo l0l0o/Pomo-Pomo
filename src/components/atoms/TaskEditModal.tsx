@@ -52,6 +52,11 @@ export const TaskEditModal: React.FC<TaskEditModalProps> = ({
     Keyboard.dismiss();
   };
 
+  // Empêcher la fermeture du modal lors du clic à l'intérieur du contenu
+  const stopPropagation = (e: any) => {
+    e.stopPropagation();
+  };
+
   if (!task) return null;
 
   return (
@@ -61,107 +66,121 @@ export const TaskEditModal: React.FC<TaskEditModalProps> = ({
       visible={visible}
       onRequestClose={onClose}
     >
-      <TouchableWithoutFeedback onPress={dismissKeyboard}>
-        <View style={styles.modalOverlay}>
-          <View
-            style={[
-              styles.modalContent,
-              { backgroundColor: colors[currentMode].buttonBg },
-            ]}
-          >
-            <View style={styles.header}>
-              <Text
+      <View style={styles.modalContainer}>
+        <TouchableWithoutFeedback onPress={dismissKeyboard}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback onPress={stopPropagation}>
+              <View
                 style={[
-                  styles.modalTitle,
-                  { color: colors[currentMode].taskText },
+                  styles.modalContent,
+                  { backgroundColor: colors[currentMode].buttonBg },
                 ]}
               >
-                Modifier la tâche
-              </Text>
-              <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                <Ionicons
-                  name="close"
-                  size={24}
-                  color={colors[currentMode].taskText}
-                />
-              </TouchableOpacity>
-            </View>
+                <View style={styles.header}>
+                  <Text
+                    style={[
+                      styles.modalTitle,
+                      { color: colors[currentMode].taskText },
+                    ]}
+                  >
+                    Modifier la tâche
+                  </Text>
+                  <TouchableOpacity
+                    onPress={onClose}
+                    style={styles.closeButton}
+                  >
+                    <Ionicons
+                      name="close"
+                      size={24}
+                      color={colors[currentMode].taskText}
+                    />
+                  </TouchableOpacity>
+                </View>
 
-            <TextInput
-              style={[
-                styles.input,
-                {
-                  color: colors[currentMode].taskText,
-                  backgroundColor: `${colors[currentMode].background}50`,
-                },
-              ]}
-              placeholder="Titre de la tâche"
-              placeholderTextColor={`${colors[currentMode].taskDescription}80`}
-              value={title}
-              onChangeText={setTitle}
-            />
+                <View>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      {
+                        color: colors[currentMode].taskText,
+                        backgroundColor: `${colors[currentMode].background}50`,
+                      },
+                    ]}
+                    placeholder="Titre de la tâche"
+                    placeholderTextColor={`${colors[currentMode].taskDescription}80`}
+                    value={title}
+                    onChangeText={setTitle}
+                  />
+                </View>
 
-            <TextInput
-              style={[
-                styles.input,
-                styles.descriptionInput,
-                {
-                  color: colors[currentMode].taskText,
-                  backgroundColor: `${colors[currentMode].background}50`,
-                },
-              ]}
-              placeholder="Description (optionnelle)"
-              placeholderTextColor={`${colors[currentMode].taskDescription}80`}
-              value={description}
-              onChangeText={setDescription}
-              multiline
-              numberOfLines={4}
-              textAlignVertical="top"
-            />
+                <View>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      styles.descriptionInput,
+                      {
+                        color: colors[currentMode].taskText,
+                        backgroundColor: `${colors[currentMode].background}50`,
+                      },
+                    ]}
+                    placeholder="Description (optionnelle)"
+                    placeholderTextColor={`${colors[currentMode].taskDescription}80`}
+                    value={description}
+                    onChangeText={setDescription}
+                    multiline
+                    numberOfLines={4}
+                    textAlignVertical="top"
+                  />
+                </View>
 
-            <View style={styles.buttonsContainer}>
-              <TouchableOpacity
-                style={[
-                  styles.button,
-                  styles.cancelButton,
-                  { borderColor: `${colors[currentMode].taskText}30` },
-                ]}
-                onPress={onClose}
-              >
-                <Text
-                  style={[
-                    styles.buttonText,
-                    { color: colors[currentMode].taskText },
-                  ]}
-                >
-                  Annuler
-                </Text>
-              </TouchableOpacity>
+                <View style={styles.buttonsContainer}>
+                  <TouchableOpacity
+                    style={[
+                      styles.button,
+                      styles.cancelButton,
+                      { borderColor: `${colors[currentMode].taskText}30` },
+                    ]}
+                    onPress={onClose}
+                  >
+                    <Text
+                      style={[
+                        styles.buttonText,
+                        { color: colors[currentMode].taskText },
+                      ]}
+                    >
+                      Annuler
+                    </Text>
+                  </TouchableOpacity>
 
-              <TouchableOpacity
-                style={[
-                  styles.button,
-                  styles.saveButton,
-                  !title.trim() && styles.disabledButton,
-                  {
-                    backgroundColor: colors[currentMode].taskText,
-                    opacity: !title.trim() ? 0.6 : 1,
-                  },
-                ]}
-                onPress={handleSave}
-                disabled={!title.trim()}
-              >
-                <Text style={styles.buttonText}>Enregistrer</Text>
-              </TouchableOpacity>
-            </View>
+                  <TouchableOpacity
+                    style={[
+                      styles.button,
+                      styles.saveButton,
+                      !title.trim() && styles.disabledButton,
+                      {
+                        backgroundColor: colors[currentMode].taskText,
+                        opacity: !title.trim() ? 0.6 : 1,
+                      },
+                    ]}
+                    onPress={handleSave}
+                    disabled={!title.trim()}
+                  >
+                    <Text style={styles.buttonText}>Enregistrer</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+      </View>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+  },
   modalOverlay: {
     flex: 1,
     justifyContent: "center",

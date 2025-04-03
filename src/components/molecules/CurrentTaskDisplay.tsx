@@ -116,19 +116,4 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 5,
   },
-  resetButton: {
-    backgroundColor: "rgba(255, 255, 255, 0.3)",
-    borderRadius: 10,
-    padding: 15,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-    marginTop: 20,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.5)",
-  },
-  resetButtonText: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
 });

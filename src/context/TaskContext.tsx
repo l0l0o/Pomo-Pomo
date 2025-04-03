@@ -12,7 +12,6 @@ export type Task = {
 type TaskContextType = {
   tasks: Task[];
   currentTask: Task | null;
-  loading: boolean;
   addTask: (title: string, description: string) => Promise<void>;
   toggleTaskCompletion: (id: string) => Promise<void>;
   deleteTask: (id: string) => Promise<void>;
@@ -35,7 +34,6 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [currentTask, setCurrentTaskState] = useState<Task | null>(null);
-  const [loading, setLoading] = useState(true);
 
   // Chargement initial des tâches depuis AsyncStorage
   useEffect(() => {
@@ -55,8 +53,6 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
         }
       } catch (error) {
         console.error("Erreur lors du chargement des tâches:", error);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -198,7 +194,6 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         tasks,
         currentTask,
-        loading,
         addTask,
         toggleTaskCompletion,
         deleteTask,

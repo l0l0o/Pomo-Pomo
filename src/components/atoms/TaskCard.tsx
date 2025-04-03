@@ -52,21 +52,32 @@ export const TaskCard: React.FC<TaskCardProps> = ({
     deleteTask(task.id);
   };
 
+  // Fermer le modal d'édition
+  const handleCloseEditModal = () => {
+    setIsEditModalVisible(false);
+  };
+
+  // Fonction pour ouvrir la modale d'édition de façon sécurisée
+  const openEditModal = () => {
+    // Ferme le swipeable si ouvert
+    closeSwipeable();
+
+    // Petit délai pour s'assurer que le swipeable est fermé
+    // avant d'ouvrir la modale
+    setTimeout(() => {
+      setIsEditModalVisible(true);
+    }, 10);
+  };
+
   // Fonction pour gérer la modification d'une tâche
   const handleEdit = () => {
-    closeSwipeable();
-    setIsEditModalVisible(true);
+    openEditModal();
   };
 
   // Fonction pour gérer la complétion d'une tâche
   const handleToggleComplete = () => {
     closeSwipeable();
     toggleTaskCompletion(task.id);
-  };
-
-  // Fermer le modal d'édition
-  const handleCloseEditModal = () => {
-    setIsEditModalVisible(false);
   };
 
   // Boutons d'action à droite (suppression)
@@ -256,7 +267,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
 
       <TaskEditModal
         visible={isEditModalVisible}
-        task={task}
+        task={isEditModalVisible ? task : null}
         onClose={handleCloseEditModal}
       />
     </>
