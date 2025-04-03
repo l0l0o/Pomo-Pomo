@@ -36,10 +36,6 @@ export const timerStyles = StyleSheet.create({
     paddingVertical: 50,
     paddingHorizontal: 10,
   },
-  pomodoroCountContainer: {
-    alignSelf: "flex-end",
-    marginBottom: 20,
-  },
   pomodoroCountText: {
     fontSize: 16,
     fontWeight: "bold",
@@ -63,7 +59,7 @@ export const timerStyles = StyleSheet.create({
   },
   time: {
     fontSize: 100,
-    fontWeight: "bold",
+    fontWeight: "normal",
   },
   buttonText: {
     fontSize: 24,
