@@ -24,14 +24,17 @@ export const Button: React.FC<ButtonProps> = ({
   style,
 }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={[timerStyles.button, style]}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[timerStyles.button, style]}
+      activeOpacity={0.7}
+    >
       <Animated.View
         style={[
           {
             width: "100%",
-            padding: 10,
             alignItems: "center",
-            borderRadius: 5,
+            justifyContent: "center",
           },
           animatedButtonStyle,
         ]}

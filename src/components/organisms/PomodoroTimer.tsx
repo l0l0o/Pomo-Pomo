@@ -1,6 +1,5 @@
 import React from "react";
 import { Animated, StyleSheet } from "react-native";
-import { PomodoroCounter } from "../molecules/PomodoroCounter";
 import { StatusDisplay } from "../molecules/StatusDisplay";
 import { ControlButtonGroup } from "../molecules/ControlButtonGroup";
 import { usePomodoro } from "../../context/PomodoroContext";
@@ -42,17 +41,14 @@ export const PomodoroTimer: React.FC = () => {
         styles.containerAdjust,
       ]}
     >
-      <PomodoroCounter
-        count={pomodoroCount}
-        animatedTextStyle={animatedStyles.animatedCountText}
-      />
-
       <StatusDisplay
         isWorkTime={isWorkTime}
         timeString={formatTime(counter)}
         animatedTextStyle={animatedStyles.animatedText}
         animatedTimeStyle={animatedStyles.animatedTime}
         pauseAnimatedStyle={pauseAnimatedStyle}
+        pomodoroCount={pomodoroCount}
+        animatedCountTextStyle={animatedStyles.animatedCountText}
       />
 
       <ControlButtonGroup

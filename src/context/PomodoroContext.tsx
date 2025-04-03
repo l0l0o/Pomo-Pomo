@@ -7,10 +7,15 @@ import React, {
   useCallback,
 } from "react";
 import { Animated, AppState, AppStateStatus } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// Durées en secondes
-const WORK_TIME = 25 * 60;
-const BREAK_TIME = 5 * 60;
+// Durées par défaut en secondes
+const DEFAULT_WORK_TIME = 25 * 60;
+const DEFAULT_BREAK_TIME = 5 * 60;
+
+// Clés pour AsyncStorage
+const WORK_TIME_KEY = "workTime";
+const BREAK_TIME_KEY = "breakTime";
 
 type PomodoroContextType = {
   counter: number;
@@ -20,6 +25,9 @@ type PomodoroContextType = {
   animationValue: Animated.Value;
   pauseAnimationValue: Animated.Value;
   hasStarted: boolean;
+  workTime: number;
+  breakTime: number;
+  updateTimerSettings: (newWorkTime: number, newBreakTime: number) => void;
   handleStart: () => void;
   handleStop: () => void;
   handleReset: () => void;
@@ -33,7 +41,9 @@ const PomodoroContext = createContext<PomodoroContextType | undefined>(
 export const PomodoroProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [counter, setCounter] = useState(WORK_TIME);
+  const [workTime, setWorkTime] = useState(DEFAULT_WORK_TIME);
+  const [breakTime, setBreakTime] = useState(DEFAULT_BREAK_TIME);
+  const [counter, setCounter] = useState(workTime);
   const [isRunning, setIsRunning] = useState(false);
   const [isWorkTime, setIsWorkTime] = useState(true);
   const [pomodoroCount, setPomodoroCount] = useState(0);
@@ -43,8 +53,67 @@ export const PomodoroProvider: React.FC<{ children: React.ReactNode }> = ({
   const animationValue = useRef(new Animated.Value(0)).current;
   const pauseAnimationValue = useRef(new Animated.Value(1)).current;
   const startTimeRef = useRef<number | null>(null);
-  const remainingTimeRef = useRef<number>(WORK_TIME);
+  const remainingTimeRef = useRef<number>(workTime);
   const appState = useRef(AppState.currentState);
+
+  // Charger les paramètres de durée depuis AsyncStorage au démarrage
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const savedWorkTime = await AsyncStorage.getItem(WORK_TIME_KEY);
+        const savedBreakTime = await AsyncStorage.getItem(BREAK_TIME_KEY);
+
+        if (savedWorkTime) {
+          const parsedWorkTime = parseInt(savedWorkTime, 10);
+          setWorkTime(parsedWorkTime);
+          if (isWorkTime && !isRunning) {
+            setCounter(parsedWorkTime);
+            remainingTimeRef.current = parsedWorkTime;
+          }
+        }
+
+        if (savedBreakTime) {
+          const parsedBreakTime = parseInt(savedBreakTime, 10);
+          setBreakTime(parsedBreakTime);
+          if (!isWorkTime && !isRunning) {
+            setCounter(parsedBreakTime);
+            remainingTimeRef.current = parsedBreakTime;
+          }
+        }
+      } catch (error) {
+        console.error("Erreur lors du chargement des paramètres:", error);
+      }
+    };
+
+    loadSettings();
+  }, []);
+
+  // Fonction pour mettre à jour les durées des timers
+  const updateTimerSettings = useCallback(
+    async (newWorkTime: number, newBreakTime: number) => {
+      try {
+        await AsyncStorage.setItem(WORK_TIME_KEY, newWorkTime.toString());
+        await AsyncStorage.setItem(BREAK_TIME_KEY, newBreakTime.toString());
+
+        setWorkTime(newWorkTime);
+        setBreakTime(newBreakTime);
+
+        // Mettre à jour le compteur si on n'est pas en cours de timer
+        if (!isRunning) {
+          if (isWorkTime) {
+            setCounter(newWorkTime);
+            remainingTimeRef.current = newWorkTime;
+          } else {
+            setCounter(newBreakTime);
+            remainingTimeRef.current = newBreakTime;
+          }
+        }
+      } catch (error) {
+        console.error("Erreur lors de la sauvegarde des paramètres:", error);
+      }
+    },
+    [isRunning, isWorkTime]
+  );
 
   const startTimer = useCallback((initialValue: number) => {
     // Enregistrer l'heure de départ et la valeur initiale du compteur
@@ -170,8 +239,9 @@ export const PomodoroProvider: React.FC<{ children: React.ReactNode }> = ({
       if (!isWorkTime) {
         setPomodoroCount((prev) => prev + 1);
       }
+
       setIsWorkTime(!isWorkTime);
-      const newDuration = isWorkTime ? BREAK_TIME : WORK_TIME;
+      const newDuration = isWorkTime ? breakTime : workTime;
       setCounter(newDuration);
 
       if (isRunning) {
@@ -179,7 +249,7 @@ export const PomodoroProvider: React.FC<{ children: React.ReactNode }> = ({
         startTimer(newDuration);
       }
     }
-  }, [counter, isWorkTime, isRunning]);
+  }, [counter, isWorkTime, isRunning, workTime, breakTime]);
 
   const handleStart = useCallback(() => {
     setIsRunning(true);
@@ -203,12 +273,11 @@ export const PomodoroProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     setIsRunning(false);
-    setCounter(WORK_TIME);
-    setIsWorkTime(true);
+    setCounter(isWorkTime ? workTime : breakTime);
     setHasStarted(false);
     startTimeRef.current = null;
-    remainingTimeRef.current = WORK_TIME;
-  }, []);
+    remainingTimeRef.current = isWorkTime ? workTime : breakTime;
+  }, [isWorkTime, workTime, breakTime]);
 
   const formatTime = useCallback((seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -226,6 +295,9 @@ export const PomodoroProvider: React.FC<{ children: React.ReactNode }> = ({
         animationValue,
         pauseAnimationValue,
         hasStarted,
+        workTime,
+        breakTime,
+        updateTimerSettings,
         handleStart,
         handleStop,
         handleReset,
