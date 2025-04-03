@@ -64,7 +64,7 @@ export const PomodoroTimer: React.FC = () => {
         animatedTextStyle={animatedStyles.animatedButtonText}
       />
 
-      <CurrentTaskDisplay currentTask={currentTask} animatedTextStyle={null} />
+      <CurrentTaskDisplay currentTask={currentTask} />
     </Animated.View>
   );
 };

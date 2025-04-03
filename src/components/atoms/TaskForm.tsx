@@ -6,13 +6,9 @@ import { usePomodoro } from "../../context/PomodoroContext";
 
 type TaskFormProps = {
   onSubmit: (title: string, description: string) => void;
-  animatedStyle?: any;
 };
 
-export const TaskForm: React.FC<TaskFormProps> = ({
-  onSubmit,
-  animatedStyle,
-}) => {
+export const TaskForm: React.FC<TaskFormProps> = ({ onSubmit }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const { isWorkTime } = usePomodoro();
