@@ -42,34 +42,12 @@ Une application de gestion de temps basée sur la technique Pomodoro, développ�
 - [React Native Reanimated](https://docs.swmansion.com/react-native-reanimated/)
 - [React Native Gesture Handler](https://docs.swmansion.com/react-native-gesture-handler/)
 
-## 📋 Structure du projet
-
-```
-Pomo-Pomo/
-├── app/                 # Routes et navigation (Expo Router)
-├── src/
-│   ├── components/      # Composants UI (Atomic Design)
-│   │   ├── atoms/       # Composants de base (boutons, textes, etc.)
-│   │   ├── molecules/   # Combinaisons de composants atomiques
-│   │   ├── organisms/   # Sections fonctionnelles complètes
-│   │   └── templates/   # Mises en page des écrans
-│   ├── context/         # Contextes React (état global)
-│   ├── styles/          # Styles et thèmes
-│   └── types/           # Définitions TypeScript
-├── assets/              # Images, polices et autres ressources
-└── ...
-```
-
 ## 🔧 Comment utiliser l'application
 
 1. **Accueil** : Visualisez le minuteur Pomodoro et la tâche en cours
 2. **Tâches** : Gérez votre liste de tâches
 3. **Statistiques** : Consultez vos statistiques de productivité
 4. **Paramètres** : Personnalisez les durées des cycles et autres options
-
-## 🤝 Contribuer
-
-Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou à soumettre une pull request.
 
 ## 📄 Licence
 
